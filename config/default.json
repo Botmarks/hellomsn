@@ -1,0 +1,13 @@
+{
+    "ssl": {
+        "enabled": false
+    },
+    "ports": {
+        "http": 8080
+    },
+    "tokens": {
+        "validationToken": "---",
+        "pageAccessToken": "---",
+        "appSecret": "---"
+    }
+}

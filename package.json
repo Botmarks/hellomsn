@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "name": "hellomsn",
+  "description": "Facebook Messenger bot that can greet user with the user's name.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Botmarks/hellomsn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Botmarks/hellomsn/issues"
+  },
+  "homepage": "https://github.com/Botmarks/hellomsn#readme",
+  "author": "andy250",
+  "license": "Apache-2.0",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "1.15.1",
+    "config": "1.21.0",
+    "express": "4.13.4",
+    "winston": "2.2.0"
+  }
+}
