@@ -3,7 +3,7 @@
         "enabled": false
     },
     "ports": {
-        "http": 8080
+        "http": 9600
     },
     "tokens": {
         "validationToken": "---",
