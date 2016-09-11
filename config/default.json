@@ -9,5 +9,8 @@
         "validationToken": "---",
         "pageAccessToken": "---",
         "appSecret": "---"
+    },
+    "botmarks": {
+        "apiResponseUri": "http://localhost:10080/webhook/messenger/response"
     }
 }
