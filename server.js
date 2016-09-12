@@ -78,23 +78,14 @@ function receivedMessage(event) {
 
 /* ---------- WEB SERVER ----------- */
 
-var ssl = config.get('ssl');
 var ports = config.get('ports');
 
-if (ssl.enabled) {
-    const httpsOptions = {
-        ca: fs.readFileSync(path.join(ssl.certRoot, 'chain.pem')),
-        key: fs.readFileSync(path.join(ssl.certRoot, 'privkey.pem')),
-        cert: fs.readFileSync(path.join(ssl.certRoot, 'cert.pem'))
-    };
+const httpsOptions = {
+	ca: fs.readFileSync(path.join(ssl.certRoot, 'chain.pem')),
+	key: fs.readFileSync(path.join(ssl.certRoot, 'privkey.pem')),
+	cert: fs.readFileSync(path.join(ssl.certRoot, 'cert.pem'))
+};
 
-    https.createServer(httpsOptions, app).listen(ports.https, function () {
-        logger.log('info', 'HTTPS on port %d', ports.https);
-    });
-} else {
-    logger.log('info', 'HTTPS disabled');
-}
-
-http.createServer(app).listen(ports.http, function () {
-    logger.log('info', 'HTTP on port %d', ports.http);
+https.createServer(httpsOptions, app).listen(ports.https, function () {
+	logger.log('info', 'HTTPS on port %d', ports.https);
 });

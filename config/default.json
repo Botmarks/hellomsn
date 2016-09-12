@@ -1,9 +1,9 @@
 {
     "ssl": {
-        "enabled": false
+        "certRoot": "---"
     },
     "ports": {
-        "http": 9600
+        "https": 8443
     },
     "tokens": {
         "validationToken": "---",
