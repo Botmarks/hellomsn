@@ -78,7 +78,8 @@ function receivedMessage(event) {
 
 /* ---------- WEB SERVER ----------- */
 
-var ports = config.get('ports');
+let ports = config.get('ports');
+let ssl = config.get('ssl');
 
 const httpsOptions = {
 	ca: fs.readFileSync(path.join(ssl.certRoot, 'chain.pem')),
