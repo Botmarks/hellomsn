@@ -1,5 +1,4 @@
 const express = require('express');
-const https = require('https');
 const http = require('http');
 const fs = require('fs');
 const bodyParser = require('body-parser');
@@ -76,17 +75,12 @@ function receivedMessage(event) {
     msn.sendTextMessage(event.sender.id, answer, event.x__botmark);
 }
 
+msn.setGreetingText('Welcome to HelloYou bot! Say "My name is {your name}".');
+
 /* ---------- WEB SERVER ----------- */
 
 let ports = config.get('ports');
-let ssl = config.get('ssl');
 
-const httpsOptions = {
-	ca: fs.readFileSync(path.join(ssl.certRoot, 'chain.pem')),
-	key: fs.readFileSync(path.join(ssl.certRoot, 'privkey.pem')),
-	cert: fs.readFileSync(path.join(ssl.certRoot, 'cert.pem'))
-};
-
-https.createServer(httpsOptions, app).listen(ports.https, function () {
-	logger.log('info', 'HTTPS on port %d', ports.https);
+http.createServer(app).listen(ports.http, function () {
+	logger.log('info', 'HTTP on port %d', ports.http);
 });
