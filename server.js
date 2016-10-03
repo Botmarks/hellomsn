@@ -4,9 +4,27 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const config = require('config');
 const path = require('path');
+const nodemailer = require('nodemailer');
+let emailTransporter = nodemailer.createTransport({
+    host: config.email.host,
+    port: config.email.port,
+    secure: true,
+    auth: {
+        user: config.email.user,
+        pass: config.email.password
+    }
+});
+emailTransporter.verify(function (error, success) {
+    if (error) {
+        console.log(error);
+    } else {
+        console.log('SMTP is ready');
+    }
+});
 
 const messenger = require('./lib/messenger');
 const logger = require('./lib/logger');
+let emailMeRegex = new RegExp(/email me at (\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b) with (.*)/, 'i');
 
 /* ---------- CONFIG ---------- */
 
@@ -64,11 +82,50 @@ app.post('/webhook', function (req, res) {
     }
 });
 
+function extractEmailSetup(command) {
+    let match = command.match(emailMeRegex);
+    let result = null;
+    if (match && match.length > 2) {
+        result = {
+            email: match[1],
+            subject: match[2]
+        }
+    }
+    return result;
+}
+
+function sendEmail(setup) {
+    let data = {
+        from: config.email.from,
+        to: setup.email,
+        subject: setup.subject,
+        text: ''
+    };
+    emailTransporter.sendMail(data, function (error, info) {
+        if (error) {
+            logger.log('error', 'Sending email failed:\n\t%s', JSON.stringify(error || {}));
+        } else {
+            logger.debug('Sending email OK: ' +  info.response);
+        }
+    });
+}
+
 function receivedMessage(event) {
     let me = this;
     let answer = null;
-    if (event.message.text && event.message.text.toLowerCase().indexOf('my name is ') === 0) {
-        answer = 'Hello ' + event.message.text.substr(11);
+    if (event.message.text) {
+        var command = event.message.text.toLowerCase();
+        if (command.indexOf('email me at ') === 0) {
+            var emailSetup = extractEmailSetup(command);
+            if (emailSetup) {
+                sendEmail(emailSetup);
+                answer = 'Email is sent!';
+            } else {
+                answer = 'There is something wrong with the email command. Please try again.';
+            }
+        } else if (command.indexOf('my name is ') === 0) {
+            answer = 'Hello ' + event.message.text.substr(11);
+        }
     } else {
         answer = 'Say "My name is {your name}"'
     }
@@ -82,5 +139,5 @@ msn.setGreetingText('Welcome to HelloYou bot! Say "My name is {your name}".');
 let ports = config.get('ports');
 
 http.createServer(app).listen(ports.http, function () {
-	logger.log('info', 'HTTP on port %d', ports.http);
+    logger.log('info', 'HTTP on port %d', ports.http);
 });

@@ -2,8 +2,15 @@
     "ssl": {
         "certRoot": "---"
     },
+    "email": {
+        "host": "---",
+        "port": "465",
+        "user": "---",
+        "password": "---",
+        "from": "---"
+    },
     "ports": {
-        "https": 8443
+        "http": 20080
     },
     "tokens": {
         "validationToken": "---",
